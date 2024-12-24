@@ -23,11 +23,10 @@ db.connect((err)=>{
 
 
 app.get('/api/getVendorUsers',async( req,res)=>{
-    const prId=req.query.prId;
+    const prLineItemId=req.query.prId;
     const custOrgId=req.query.custOrgId;
-    console.log(req.query.prId)
-    console.log(req.query)
-    if (!prId|| !custOrgId){
+  
+    if (!prLineItemId|| !custOrgId){
         return res.status(400).json({
             error: "missing query params"
         })
@@ -39,18 +38,18 @@ app.get('/api/getVendorUsers',async( req,res)=>{
                                            vu.Username,
                                            vu.Name  
                                        FROM
-                                           prLineItems pli
+                                           PrLineItems pli
                                        JOIN 
-                                       vendorUsers vu
+                                       VendorUsers vu
                                        ON
  Find_IN_SET(vu.VendorOrganizationId,pli.suppliers) >0
  WHERE
   pli.purchaseRequestId=?
              AND pli.custOrgId=?
             AND vu.Role='Admin'; `;
-        const [results ]=await db.promise().query(query,[prId,custOrgId]);
+        const [results ]=await db.promise().query(query,[prLineItemId,custOrgId]);
         
-
+res.json(results)
 
 
 
