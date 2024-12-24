@@ -12,8 +12,7 @@ const db=mysql.createConnection({
 db.connect((err)=>{
     if(err){
         console.log(err)
-
-    }
+  }
     console.log("connected successfully to database")
 })
 
@@ -38,7 +37,7 @@ app.get('/api/getVendorUsers',async( req,res)=>{
  Find_IN_SET(vu.VendorOrganizationId,pli.suppliers)>0
  where
   pli.purchaseRequestId=?
-  AND pli.custOrdId=?
+  AND pli.custOrgId=?
   AND vu.Role='Admin'
         
         
