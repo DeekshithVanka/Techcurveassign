@@ -4,16 +4,20 @@ const mysql=require("mysql2")
 const app=express()
 
 const db=mysql.createConnection({
-    host:'nodejs-technical-test.cm30rlobuoic.ap-southeast-1.rds.amazonaws.com',
-    user: 'candidate',
-    password:' NoTeDeSt^C10.6?SxwY882}' ,
-    database: 'conqtvms'
+    host:"nodejs-technical-test.cm30rlobuoic.ap-southeast-1.rds.amazonaws.com",
+    user: "candidate",
+    password:"NoTeDeSt^C10.6?SxwY882}",
+    database: "conqtvms_dev"
 })
+
+
+
 db.connect((err)=>{
     if(err){
         console.log(err)
   }
-    console.log("connected successfully to database")
+  else{
+    console.log("connected successfully to database")}
 })
 
 
@@ -31,19 +35,20 @@ app.get('/api/getVendorUsers',async( req,res)=>{
 
     try{
         const query=`
- select vu.VendorOrganizationId As supplierId ,vu.Username,vu.Name  from prLineItems pli
- Join vendorUsers vu
- ON
- Find_IN_SET(vu.VendorOrganizationId,pli.suppliers)>0
- where
+ SELECT vu.VendorOrganizationId As supplierId ,
+                                           vu.Username,
+                                           vu.Name  
+                                       FROM
+                                           prLineItems pli
+                                       JOIN 
+                                       vendorUsers vu
+                                       ON
+ Find_IN_SET(vu.VendorOrganizationId,pli.suppliers) >0
+ WHERE
   pli.purchaseRequestId=?
-  AND pli.custOrgId=?
-  AND vu.Role='Admin'
-        
-        
-        
-        `;
-        const [results ]=await db.promise().query(query,prId,custOrgId);
+             AND pli.custOrgId=?
+            AND vu.Role='Admin'; `;
+        const [results ]=await db.promise().query(query,[prId,custOrgId]);
         
 
 
@@ -52,7 +57,7 @@ app.get('/api/getVendorUsers',async( req,res)=>{
     }
     catch(err)
     {
-        console.log(error)
+        console.log(err)
         res.status(500).json({
             error :"internal server error"
         })
@@ -60,5 +65,5 @@ app.get('/api/getVendorUsers',async( req,res)=>{
 })
 
 app.listen('3000',()=>{
-    console.log("app is listening at port 4000")
+    console.log("app is listening at port 3000")
 })
